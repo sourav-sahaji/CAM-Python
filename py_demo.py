@@ -48,9 +48,18 @@ weights_LR = net.params[out_layer][0].data # get the softmax layer of the networ
 image = cv2.imread('img2.jpg')
 image = cv2.resize(image, (256, 256))
 
+# Take center crop.
+center = np.array(image.shape[:2]) / 2.0
+crop = np.tile(center, (1, 2))[0] + np.concatenate([
+	-np.array([crop_size, crop_size]) / 2.0,
+	np.array([crop_size, crop_size]) / 2.0
+])
+crop = crop.astype(int)
+input_ = image[crop[0]:crop[2], crop[1]:crop[3], :]
+
 # extract conv features
 net.blobs['data'].reshape(*np.asarray([1,3,crop_size,crop_size])) # run only one image
-net.blobs['data'].data[...][0,:,:,:] = transformer.preprocess('data', image)
+net.blobs['data'].data[...][0,:,:,:] = transformer.preprocess('data', input_)
 out = net.forward()
 scores = out['prob']
 activation_lastconv = net.blobs[last_conv].data
