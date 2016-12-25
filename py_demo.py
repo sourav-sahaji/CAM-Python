@@ -1,6 +1,6 @@
 import numpy as np
 import sys
-caffe_root = '/home/guillem/git/caffe/'
+caffe_root = '../caffe/'
 sys.path.insert(1, caffe_root+'python/')
 import caffe
 import cv2
